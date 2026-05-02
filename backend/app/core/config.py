@@ -3,10 +3,11 @@ import os
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
-CACHE_DIR = Path(os.getenv("FASTF1_CACHE_DIR", ROOT_DIR / "cache"))
+DEFAULT_CACHE_DIR = Path("/tmp/fastf1-cache") if os.getenv("VERCEL") else ROOT_DIR / "cache"
+CACHE_DIR = Path(os.getenv("FASTF1_CACHE_DIR", DEFAULT_CACHE_DIR))
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
 FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "http://localhost:3000")
 OPEN_METEO_BASE_URL = os.getenv(
   "OPEN_METEO_BASE_URL",
   "https://api.open-meteo.com/v1/forecast",
 )
-
