@@ -56,6 +56,11 @@ export default async function HomePage() {
                 <div className="mt-1 text-sm text-zinc-400">
                   {prediction.model.trainedSamples} samples · {prediction.model.featureCount} features
                 </div>
+                {prediction.weather.source === "fallback" ? (
+                  <div className="mt-2 text-xs uppercase tracking-[0.18em] text-amber-300">
+                    Preview fallback active
+                  </div>
+                ) : null}
               </div>
             </div>
           </section>

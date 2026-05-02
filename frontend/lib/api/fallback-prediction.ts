@@ -1,0 +1,92 @@
+import type { PredictionResponse } from "@/lib/api/types";
+
+export const fallbackPrediction: PredictionResponse = {
+  target: {
+    year: 2026,
+    round: 6,
+    eventName: "Miami Grand Prix",
+    eventDate: "2026-05-03",
+    circuitName: "Miami International Autodrome",
+    country: "United States",
+  },
+  weather: {
+    source: "fallback",
+    airTempC: 29.0,
+    rainProbability: 20,
+    windSpeedKph: 18,
+    conditionLabel: "Warm track, low rain risk",
+  },
+  model: {
+    name: "random_forest_preview",
+    trainedSamples: 412,
+    featureCount: 11,
+    trainYears: [2022, 2023, 2024, 2025],
+  },
+  winner: {
+    rank: 1,
+    driverCode: "VER",
+    fullName: "Max Verstappen",
+    teamName: "Red Bull",
+    winProbability: 0.36,
+    score: 0.91,
+    recentForm: 0.9,
+    sameTrackScore: 0.94,
+    weatherFit: 0.74,
+    explanation: [
+      "Strong recent finishing trend against the field.",
+      "High same-track score from prior Miami performance.",
+      "Lower modeled downside than the closest challengers.",
+    ],
+  },
+  challengers: [
+    {
+      rank: 2,
+      driverCode: "NOR",
+      fullName: "Lando Norris",
+      teamName: "McLaren",
+      winProbability: 0.24,
+      score: 0.83,
+      recentForm: 0.88,
+      sameTrackScore: 0.79,
+      weatherFit: 0.77,
+      explanation: [
+        "Recent pace trend keeps him in direct contention.",
+        "Weather-adjusted fit is one of the best in the field.",
+      ],
+    },
+    {
+      rank: 3,
+      driverCode: "LEC",
+      fullName: "Charles Leclerc",
+      teamName: "Ferrari",
+      winProbability: 0.18,
+      score: 0.79,
+      recentForm: 0.8,
+      sameTrackScore: 0.73,
+      weatherFit: 0.72,
+      explanation: [
+        "Qualifying upside keeps the ceiling high for race day.",
+        "Needs a cleaner race pace conversion than the top two.",
+      ],
+    },
+    {
+      rank: 4,
+      driverCode: "PIA",
+      fullName: "Oscar Piastri",
+      teamName: "McLaren",
+      winProbability: 0.12,
+      score: 0.74,
+      recentForm: 0.78,
+      sameTrackScore: 0.69,
+      weatherFit: 0.75,
+      explanation: [
+        "Model sees enough upside to stay near the front group.",
+        "Smaller confidence gap than the top three contenders.",
+      ],
+    },
+  ],
+  confidenceBand: {
+    winnerVsSecond: 0.12,
+    label: "Moderate confidence",
+  },
+};
