@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.config import FRONTEND_ORIGIN
+from app.core.config import FRONTEND_ORIGINS
 from app.services.fastf1_service import get_schedule
 from app.services.prediction_service import backtest_model, predict_event, predict_next_race
 
@@ -12,11 +12,21 @@ app = FastAPI(title="F1 Winner Prediction API", version="1.0.0")
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=[FRONTEND_ORIGIN, "http://127.0.0.1:3000"],
+  allow_origins=FRONTEND_ORIGINS,
   allow_credentials=True,
   allow_methods=["*"],
   allow_headers=["*"],
 )
+
+
+@app.get("/")
+def root() -> dict:
+  return {
+    "name": "F1 Winner Prediction API",
+    "status": "ok",
+    "docs": "/docs",
+    "health": "/api/health",
+  }
 
 
 @app.get("/api/health")

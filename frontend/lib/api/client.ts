@@ -18,7 +18,7 @@ export async function getNextRacePrediction(): Promise<PredictionResponse | null
   try {
     const response = await fetch(`${API_BASE}/api/predictions/next-race`, {
       cache: "no-store",
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(20000),
     });
 
     if (!response.ok) {

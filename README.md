@@ -1,3 +1,13 @@
+---
+title: F1 Cortex Predictor API
+emoji: "🏎️"
+colorFrom: red
+colorTo: gray
+sdk: docker
+app_port: 7860
+suggested_hardware: cpu-basic
+---
+
 # F1 Winner Prediction Platform
 
 This project predicts the most likely winner of the next Formula 1 race using:
@@ -115,6 +125,26 @@ Deploy flow:
 3. Let Vercel detect the root `vercel.json` multi-service config.
 4. If you want to override the backend URL manually, set `NEXT_PUBLIC_API_BASE_URL`.
 5. Redeploy after any backend or frontend changes.
+
+## Hugging Face Spaces
+
+This repo also includes a root [Dockerfile](/Users/manishparmar/Desktop/Everything/Projects/f1/Dockerfile) so the FastAPI backend can be deployed as a Docker Space on Hugging Face.
+
+Recommended setup:
+
+1. Keep the Next.js frontend on Vercel.
+2. Create a new Hugging Face Space using `Docker`.
+3. Point that Space at this repository or push this repository into the Space repo.
+4. In the Space settings, set `FRONTEND_ORIGIN=https://<your-vercel-frontend-domain>`.
+5. In Vercel, set `NEXT_PUBLIC_API_BASE_URL=https://<your-space-subdomain>.hf.space`.
+6. Redeploy the frontend after updating the Vercel environment variable.
+
+Notes:
+
+- The Docker Space serves the FastAPI API on port `7860`.
+- FastF1 cache defaults to `/tmp/fastf1-cache` inside the container.
+- The next-race prediction response is cached in memory for 30 minutes to reduce repeated FastF1 load times.
+- The first cold request can still take noticeably longer than warmed requests.
 
 ## Main Endpoints
 

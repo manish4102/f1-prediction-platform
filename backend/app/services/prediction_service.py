@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+import time
 from typing import Any
 
 import numpy as np
@@ -61,6 +62,9 @@ FINISH_POINTS = {
   9: 2.0,
   10: 1.0,
 }
+
+PREDICTION_CACHE_TTL_SECONDS = 1800
+_prediction_cache: dict[tuple[int, int], tuple[float, dict[str, Any]]] = {}
 
 
 def _candidate_models() -> dict[str, Any]:
@@ -430,6 +434,11 @@ async def predict_next_race() -> dict:
 
 
 async def predict_event(year: int, round_number: int) -> dict:
+  cache_key = (year, round_number)
+  cached = _prediction_cache.get(cache_key)
+  if cached and (time.time() - cached[0]) < PREDICTION_CACHE_TTL_SECONDS:
+    return cached[1]
+
   schedule = get_schedule(year)
   row = schedule[schedule["RoundNumber"] == round_number].iloc[0]
   target = {
@@ -480,7 +489,7 @@ async def predict_event(year: int, round_number: int) -> dict:
   label = "High" if gap >= 0.12 else "Medium" if gap >= 0.06 else "Tight"
   summary = _backtest_summary(2018, 2019)
 
-  return {
+  result = {
     "target": {
       "year": target["year"],
       "round": target["round"],
@@ -503,3 +512,5 @@ async def predict_event(year: int, round_number: int) -> dict:
       "label": label,
     },
   }
+  _prediction_cache[cache_key] = (time.time(), result)
+  return result
