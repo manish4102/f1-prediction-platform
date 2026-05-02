@@ -4,7 +4,7 @@ This project predicts the most likely winner of the next Formula 1 race using:
 
 - FastF1 race and qualifying data
 - a weather API for race-weekend conditions
-- a scikit-learn gradient boosting model
+- a scikit-learn random forest model selected through historical backtesting
 - a FastAPI backend
 - a Next.js frontend
 
@@ -91,6 +91,31 @@ Frontend:
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
+## Vercel
+
+This repo includes a root [vercel.json](/Users/manishparmar/Desktop/Everything/Projects/f1/vercel.json)
+configured for Vercel multi-service deployments:
+
+- `frontend` -> `frontend/`
+- `backend` -> `backend/`
+- backend route prefix -> `/_/backend`
+
+On Vercel, the frontend automatically defaults to:
+
+```text
+https://<your-deployment-host>/_/backend
+```
+
+for API calls when `NEXT_PUBLIC_API_BASE_URL` is not explicitly set.
+
+Deploy flow:
+
+1. Import the GitHub repo into Vercel.
+2. Keep the project root at the repository root.
+3. Let Vercel detect the root `vercel.json` multi-service config.
+4. If you want to override the backend URL manually, set `NEXT_PUBLIC_API_BASE_URL`.
+5. Redeploy after any backend or frontend changes.
+
 ## Main Endpoints
 
 - `GET /api/health`
@@ -110,3 +135,5 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
 - The historical evaluation route performs a walk-forward backtest over the
   selected test year, training each race prediction only on races that
   happened before it.
+- The current best historical baseline was selected on a 2019 walk-forward
+  backtest and uses a random forest model.
