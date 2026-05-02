@@ -1,5 +1,4 @@
 import type { PredictionResponse } from "@/lib/api/types";
-import { fallbackPrediction } from "@/lib/api/fallback-prediction";
 
 function resolveApiBase() {
   if (process.env.NEXT_PUBLIC_API_BASE_URL) {
@@ -15,7 +14,7 @@ function resolveApiBase() {
 
 const API_BASE = resolveApiBase();
 
-export async function getNextRacePrediction(): Promise<PredictionResponse> {
+export async function getNextRacePrediction(): Promise<PredictionResponse | null> {
   try {
     const response = await fetch(`${API_BASE}/api/predictions/next-race`, {
       cache: "no-store",
@@ -28,6 +27,6 @@ export async function getNextRacePrediction(): Promise<PredictionResponse> {
 
     return response.json() as Promise<PredictionResponse>;
   } catch {
-    return fallbackPrediction;
+    return null;
   }
 }
