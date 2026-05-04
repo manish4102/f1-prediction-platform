@@ -132,7 +132,7 @@ export function LivePredictionShell() {
         </p>
         <div className="mt-4 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200">
           {prediction.snapshot
-            ? `Snapshot · Updated ${formatUpdatedAt(prediction.snapshot.generatedAt)}`
+            ? `Updated ${formatUpdatedAt(prediction.snapshot.generatedAt)}`
             : `Not Snapshot · Live Updated ${formatUpdatedAt(prediction.fetchedAt)}`}
         </div>
       </header>
