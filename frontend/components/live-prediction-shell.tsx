@@ -8,6 +8,13 @@ import type { PredictionResponse } from "@/lib/api/types";
 
 type LoadState = "loading" | "success" | "error";
 
+function formatUpdatedAt(value: string | undefined) {
+  if (!value) {
+    return null;
+  }
+  return new Date(value).toLocaleString();
+}
+
 export function LivePredictionShell() {
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
   const [state, setState] = useState<LoadState>("loading");
@@ -123,11 +130,11 @@ export function LivePredictionShell() {
           The model blends recent form, historical track performance, teammate-relative strength, DNF risk, and live
           weather context to rank the field for {prediction.target.eventName}.
         </p>
-        {prediction.snapshot ? (
-          <div className="mt-4 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200">
-            Snapshot Updated {new Date(prediction.snapshot.generatedAt).toLocaleString()}
-          </div>
-        ) : null}
+        <div className="mt-4 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200">
+          {prediction.snapshot
+            ? `Snapshot · Updated ${formatUpdatedAt(prediction.snapshot.generatedAt)}`
+            : `Not Snapshot · Live Updated ${formatUpdatedAt(prediction.fetchedAt)}`}
+        </div>
       </header>
 
       <section className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">

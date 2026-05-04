@@ -8,11 +8,11 @@
     "country": "Canada"
   },
   "weather": {
-    "source": "fallback",
-    "airTempC": null,
-    "rainProbability": null,
-    "windSpeedKph": null,
-    "conditionLabel": "Weather unavailable"
+    "source": "live",
+    "airTempC": 10.3,
+    "rainProbability": 85.0,
+    "windSpeedKph": 6.5,
+    "conditionLabel": "Possible wet race"
   },
   "model": {
     "name": "random_forest",
@@ -134,7 +134,7 @@
   },
   "snapshot": {
     "mode": "weekly",
-    "generatedAt": "2026-05-04T15:46:50.371314+00:00",
+    "generatedAt": "2026-05-04T15:53:58.290489+00:00",
     "generatedFor": "website"
   }
 }

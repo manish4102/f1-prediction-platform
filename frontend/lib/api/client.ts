@@ -25,7 +25,9 @@ export async function getSnapshotPrediction(): Promise<PredictionResponse | null
       throw new Error("Missing weekly snapshot.");
     }
 
-    return response.json() as Promise<PredictionResponse>;
+    const prediction = (await response.json()) as PredictionResponse;
+    prediction.fetchedAt = new Date().toISOString();
+    return prediction;
   } catch {
     return null;
   }
@@ -42,7 +44,9 @@ export async function getLivePrediction(): Promise<PredictionResponse | null> {
       throw new Error("Failed to load next-race prediction.");
     }
 
-    return response.json() as Promise<PredictionResponse>;
+    const prediction = (await response.json()) as PredictionResponse;
+    prediction.fetchedAt = new Date().toISOString();
+    return prediction;
   } catch {
     return null;
   }

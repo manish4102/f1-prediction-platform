@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+import unicodedata
 
 import httpx
 
@@ -16,6 +17,7 @@ TRACK_COORDS: dict[str, tuple[float, float]] = {
   "Imola": (44.3439, 11.7167),
   "Monaco": (43.7347, 7.4206),
   "Montreal": (45.5017, -73.5228),
+  "Montréal": (45.5017, -73.5228),
   "Silverstone": (52.0786, -1.0169),
   "Spa-Francorchamps": (50.4372, 5.9714),
   "Zandvoort": (52.3888, 4.5409),
@@ -24,10 +26,16 @@ TRACK_COORDS: dict[str, tuple[float, float]] = {
   "Austin": (30.1328, -97.6411),
   "Mexico City": (19.4042, -99.0907),
   "Sao Paulo": (-23.7011, -46.6972),
+  "São Paulo": (-23.7011, -46.6972),
   "Las Vegas": (36.1147, -115.1728),
   "Lusail": (25.49, 51.4542),
   "Yas Marina": (24.4672, 54.6031),
 }
+
+
+def _normalize_location(value: str) -> str:
+  normalized = unicodedata.normalize("NFKD", value)
+  return "".join(char for char in normalized if not unicodedata.combining(char)).strip()
 
 
 def _fallback_weather() -> dict[str, Any]:
@@ -41,7 +49,7 @@ def _fallback_weather() -> dict[str, Any]:
 
 
 async def get_race_weather(location: str) -> dict[str, Any]:
-  coords = TRACK_COORDS.get(location)
+  coords = TRACK_COORDS.get(location) or TRACK_COORDS.get(_normalize_location(location))
   if not coords:
     return _fallback_weather()
 
@@ -82,4 +90,3 @@ async def get_race_weather(location: str) -> dict[str, Any]:
     "windSpeedKph": float(current["wind_speed_10m"]) if current.get("wind_speed_10m") is not None else None,
     "conditionLabel": label,
   }
-
