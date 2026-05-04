@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { ChallengerList, WinnerCard } from "@/components/prediction-card";
-import { getNextRacePrediction } from "@/lib/api/client";
+import { getLivePrediction, getNextRacePrediction } from "@/lib/api/client";
 import type { PredictionResponse } from "@/lib/api/types";
 
 type LoadState = "loading" | "success" | "error";
@@ -34,25 +34,25 @@ export function LivePredictionShell() {
         <header className="glass rounded-[32px] p-8 shadow-2xl shadow-black/30">
           <div className="text-xs uppercase tracking-[0.32em] text-red-300">F1 Prediction Engine</div>
           <div className="mt-4 inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs uppercase tracking-[0.24em] text-zinc-300">
-            Connecting To Live Prediction Service
+            Loading Weekly Prediction Snapshot
           </div>
           <h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-tight md:text-6xl">
             Predict who wins the next Grand Prix before lights out.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-6 text-zinc-400 md:text-base">
-            The hosted app is waiting for the live FastF1-backed prediction service to respond. First requests can
-            take a little longer while the backend wakes and warms its cache.
+            The website checks for the latest saved Thursday prediction snapshot first, then falls back to the live
+            FastF1-backed service if no fresh snapshot is available.
           </p>
         </header>
 
         <section className="glass rounded-[28px] p-8 shadow-2xl shadow-black/30">
-          <div className="text-xs uppercase tracking-[0.28em] text-zinc-400">Loading Live Prediction</div>
+          <div className="text-xs uppercase tracking-[0.28em] text-zinc-400">Loading Prediction</div>
           <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-white/[0.05]">
             <div className="h-full w-1/3 animate-pulse rounded-full bg-red-400/70" />
           </div>
           <p className="mt-5 max-w-3xl text-sm leading-6 text-zinc-400 md:text-base">
-            If the backend is cold, this can take longer than a normal page request. The page will fill in the real
-            prediction as soon as the API responds.
+            If the saved snapshot is already available, it should appear quickly. If not, the page will wait for the
+            live backend to respond.
           </p>
         </section>
       </>
@@ -68,8 +68,8 @@ export function LivePredictionShell() {
             Predict who wins the next Grand Prix before lights out.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-6 text-zinc-400 md:text-base">
-            The hosted app only shows a winner when the live prediction API returns a real model result. No placeholder
-            winner is shown.
+            The hosted app only shows a winner when it has either a saved weekly snapshot or a real live model result.
+            No placeholder winner is shown.
           </p>
         </header>
 
@@ -77,15 +77,32 @@ export function LivePredictionShell() {
           <div className="text-xs uppercase tracking-[0.28em] text-amber-300">Live Prediction Unavailable</div>
           <h2 className="mt-3 text-3xl font-semibold">No fallback winner is shown.</h2>
           <p className="mt-4 max-w-3xl text-sm leading-6 text-zinc-400 md:text-base">
-            The hosted backend did not return a real model result in time. This usually means the external prediction
-            service is still warming up or temporarily unreachable.
+            Neither the saved weekly snapshot nor the live backend returned a real model result in time. This usually
+            means the weekly refresh has not run yet or the external prediction service is temporarily unreachable.
           </p>
           <button
             type="button"
             onClick={() => void loadPrediction()}
             className="mt-6 rounded-full border border-red-500/30 bg-red-500/10 px-5 py-2 text-sm font-medium text-red-100 transition hover:bg-red-500/20"
           >
-            Retry Live Prediction
+            Retry Prediction Load
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              setState("loading");
+              const livePrediction = await getLivePrediction();
+              if (livePrediction) {
+                setPrediction(livePrediction);
+                setState("success");
+                return;
+              }
+              setPrediction(null);
+              setState("error");
+            }}
+            className="mt-3 ml-0 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-sm font-medium text-zinc-100 transition hover:bg-white/[0.08] md:ml-3"
+          >
+            Force Live Refresh
           </button>
         </section>
       </>
@@ -106,6 +123,11 @@ export function LivePredictionShell() {
           The model blends recent form, historical track performance, teammate-relative strength, DNF risk, and live
           weather context to rank the field for {prediction.target.eventName}.
         </p>
+        {prediction.snapshot ? (
+          <div className="mt-4 inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200">
+            Snapshot Updated {new Date(prediction.snapshot.generatedAt).toLocaleString()}
+          </div>
+        ) : null}
       </header>
 
       <section className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">

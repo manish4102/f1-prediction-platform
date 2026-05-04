@@ -65,6 +65,7 @@ FINISH_POINTS = {
 
 PREDICTION_CACHE_TTL_SECONDS = 1800
 _prediction_cache: dict[tuple[int, int], tuple[float, dict[str, Any]]] = {}
+PRODUCTION_MODEL_NAME = "random_forest"
 
 
 def _candidate_models() -> dict[str, Any]:
@@ -414,6 +415,10 @@ def _best_model_instance_from_backtest(train_start_year: int = 2018, test_year: 
   return clone(_candidate_models()[summary["bestModel"]])
 
 
+def _production_model_instance() -> Any:
+  return clone(_candidate_models()[PRODUCTION_MODEL_NAME])
+
+
 def _candidate_rows_for_future(history: pd.DataFrame, target_event_name: str) -> pd.DataFrame:
   latest = history.sort_values(["eventOrder", "driverCode"]).groupby("driverCode").tail(1).copy()
   same_track = (
@@ -455,7 +460,7 @@ async def predict_event(year: int, round_number: int) -> dict:
   start_year = max(2018, year - 2)
   history = _build_recent_history_for_future(year, round_number, start_year)
   candidates = _candidate_rows_for_future(history, target["eventName"])
-  model = _best_model_instance_from_backtest()
+  model = _production_model_instance()
   model.fit(history[FEATURE_COLUMNS], history["isWinner"])
   probabilities = _predict_probs(model, candidates[FEATURE_COLUMNS])
   ranked = candidates.assign(winProbability=probabilities).sort_values("winProbability", ascending=False).reset_index(drop=True)
@@ -487,8 +492,6 @@ async def predict_event(year: int, round_number: int) -> dict:
   second = predictions[1] if len(predictions) > 1 else best
   gap = round(best["winProbability"] - second["winProbability"], 4)
   label = "High" if gap >= 0.12 else "Medium" if gap >= 0.06 else "Tight"
-  summary = _backtest_summary(2018, 2019)
-
   result = {
     "target": {
       "year": target["year"],
@@ -500,7 +503,7 @@ async def predict_event(year: int, round_number: int) -> dict:
     },
     "weather": weather,
     "model": {
-      "name": summary["bestModel"],
+      "name": PRODUCTION_MODEL_NAME,
       "trainedSamples": int(len(history)),
       "featureCount": len(FEATURE_COLUMNS),
       "trainYears": sorted(history["year"].unique().tolist()),

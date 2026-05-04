@@ -46,4 +46,9 @@ export interface PredictionResponse {
     winnerVsSecond: number;
     label: string;
   };
+  snapshot?: {
+    mode: "weekly" | "manual";
+    generatedAt: string;
+    generatedFor: string;
+  };
 }

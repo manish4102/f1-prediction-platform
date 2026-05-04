@@ -1,0 +1,140 @@
+{
+  "target": {
+    "year": 2026,
+    "round": 5,
+    "eventName": "Canadian Grand Prix",
+    "eventDate": "2026-05-24",
+    "circuitName": "Montr\u00e9al",
+    "country": "Canada"
+  },
+  "weather": {
+    "source": "fallback",
+    "airTempC": null,
+    "rainProbability": null,
+    "windSpeedKph": null,
+    "conditionLabel": "Weather unavailable"
+  },
+  "model": {
+    "name": "random_forest",
+    "trainedSamples": 1046,
+    "featureCount": 11,
+    "trainYears": [
+      2024,
+      2025,
+      2026
+    ]
+  },
+  "winner": {
+    "rank": 1,
+    "driverCode": "ANT",
+    "fullName": "Kimi Antonelli",
+    "teamName": "Mercedes",
+    "winProbability": 0.3721,
+    "score": 37.21,
+    "recentForm": 21.2,
+    "sameTrackScore": 23.0,
+    "weatherFit": 0.975,
+    "explanation": [
+      "Recent finish average: 4.80",
+      "Season points to date: 68.0",
+      "Podium rate: 50%",
+      "Same-track average finish: 3.00"
+    ]
+  },
+  "challengers": [
+    {
+      "rank": 2,
+      "driverCode": "LEC",
+      "fullName": "Charles Leclerc",
+      "teamName": "Ferrari",
+      "winProbability": 0.1916,
+      "score": 19.16,
+      "recentForm": 21.6,
+      "sameTrackScore": 14.0,
+      "weatherFit": 0.975,
+      "explanation": [
+        "Recent finish average: 4.40",
+        "Season points to date: 42.0",
+        "Podium rate: 38%",
+        "Same-track average finish: 12.00"
+      ]
+    },
+    {
+      "rank": 3,
+      "driverCode": "RUS",
+      "fullName": "George Russell",
+      "teamName": "Mercedes",
+      "winProbability": 0.1804,
+      "score": 18.041,
+      "recentForm": 22.4,
+      "sameTrackScore": 24.0,
+      "weatherFit": 1.0,
+      "explanation": [
+        "Recent finish average: 3.60",
+        "Season points to date: 55.0",
+        "Podium rate: 38%",
+        "Same-track average finish: 2.00"
+      ]
+    },
+    {
+      "rank": 4,
+      "driverCode": "HAM",
+      "fullName": "Lewis Hamilton",
+      "teamName": "Ferrari",
+      "winProbability": 0.0924,
+      "score": 9.242,
+      "recentForm": 19.4,
+      "sameTrackScore": 21.0,
+      "weatherFit": 0.95,
+      "explanation": [
+        "Recent finish average: 6.60",
+        "Season points to date: 35.0",
+        "Podium rate: 12%",
+        "Same-track average finish: 5.00"
+      ]
+    },
+    {
+      "rank": 5,
+      "driverCode": "NOR",
+      "fullName": "Lando Norris",
+      "teamName": "McLaren",
+      "winProbability": 0.0659,
+      "score": 6.594,
+      "recentForm": 18.4,
+      "sameTrackScore": 16.0,
+      "weatherFit": 0.975,
+      "explanation": [
+        "Recent finish average: 7.60",
+        "Season points to date: 20.0",
+        "Podium rate: 50%",
+        "Same-track average finish: 10.00"
+      ]
+    },
+    {
+      "rank": 6,
+      "driverCode": "VER",
+      "fullName": "Max Verstappen",
+      "teamName": "Red Bull Racing",
+      "winProbability": 0.0519,
+      "score": 5.192,
+      "recentForm": 19.6,
+      "sameTrackScore": 24.5,
+      "weatherFit": 0.975,
+      "explanation": [
+        "Recent finish average: 6.40",
+        "Season points to date: 12.0",
+        "Podium rate: 62%",
+        "Same-track average finish: 1.50"
+      ]
+    }
+  ],
+  "confidenceBand": {
+    "winnerVsSecond": 0.1805,
+    "label": "High"
+  },
+  "snapshot": {
+    "mode": "weekly",
+    "generatedAt": "2026-05-04T15:46:50.371314+00:00",
+    "generatedFor": "website"
+  }
+}

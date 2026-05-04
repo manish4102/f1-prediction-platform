@@ -86,6 +86,32 @@ npm install
 npm run dev
 ```
 
+## Weekly Snapshot Refresh
+
+The website can be driven by a saved weekly prediction snapshot instead of waiting for a live backend response on every page load.
+
+Generate the snapshot with:
+
+```bash
+cd /Users/manishparmar/Desktop/Everything/Projects/f1/backend
+.venv/bin/python scripts/refresh_prediction_snapshot.py
+```
+
+This writes:
+
+```text
+frontend/public/data/latest-prediction.json
+```
+
+Recommended Thursday workflow:
+
+1. Run the snapshot refresh script.
+2. Commit the updated `frontend/public/data/latest-prediction.json`.
+3. Push to `main`.
+4. Let Vercel redeploy automatically.
+
+Once that file is present, the frontend prefers the saved snapshot first and only falls back to the live API when the snapshot is missing.
+
 ## Environment Variables
 
 Backend:
@@ -167,3 +193,5 @@ Notes:
   happened before it.
 - The current best historical baseline was selected on a 2019 walk-forward
   backtest and uses a random forest model.
+- The website supports a snapshot-first mode so a scheduled weekly refresh can
+  publish a stable prediction without relying on a live cold-start request.
